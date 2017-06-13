@@ -20,7 +20,26 @@ E_t = E_0
 z_t = np.zeros((2, 1))
 
 for t in range(1, 11):
-    z_tp1 = np.add(z_t, np.array([[1],[0]]))
+    z_tp1 = np.array([[z_t[0,0] + t],[0]])
+    mu_tp1, E_tp1 = step(mu_t, E_t, F, E_x, H, E_z, z_tp1)
+    print('t: ', t)
+    print('z_tp1:')
+    print(z_tp1)
+    print('mu_tp1:')
+    print(mu_tp1)
+    print()
+    z_t = z_tp1
+    mu_t = mu_tp1
+    E_t = E_tp1
+
+mu_t = mu_0
+E_t = E_0
+z_t = np.zeros((4, 1))
+H = np.array([[1, 0, 0, 0, 0, 0],[0, 1, 0, 0, 0, 0],[0, 0, 0, 1, 0, 0],[0, 0, 0, 0, 1, 0]])
+E_z = np.array([[5, 0, 0, 0],[0, 5, 0, 0],[0, 0, 5, 0],[0, 0, 0, 5]])
+
+for t in range(1, 11):
+    z_tp1 = np.array([[z_t[0,0] + t],[t],[0],[0]])
     mu_tp1, E_tp1 = step(mu_t, E_t, F, E_x, H, E_z, z_tp1)
     print('t: ', t)
     print('z_tp1:')
