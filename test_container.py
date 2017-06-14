@@ -2,9 +2,9 @@ from rrt_node import RRTNode
 from rrt_container import RRTContainer
 
 cont = RRTContainer([1024, 1024], 30)
-a = RRTNode([255,10])
+a = RRTNode([100,100])
 cont.add_node(a)
-b = RRTNode([260,10])
+b = RRTNode([200,200])
 cont.add_node(b)
-c = RRTNode([257,10])
-print(cont.get_nearest_node(c).pos)
+c = RRTNode([1000,1000])
+print(cont.get_nearest_node(c))

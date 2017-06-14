@@ -225,12 +225,26 @@ class SpatialNode(object):
 
 class RRTContainer(object):
 
-    def __init__(self, dim, near_radius, max_depth=3):
+    def __init__(self, dim, near_radius, max_depth=5):
         self.root = SpatialNode(dim, [dim[0] / 2, dim[1] / 2], near_radius, 1, max_depth)
         self.root.label_neighbors_of_children()
+        self.rrt_nodes = []
+
+    # this function gets called if the tree method does not work
+    def get_nearest_node_in_linear_time(self, node):
+        nearest = None
+        min_dist = 1000000
+        for near in self.rrt_nodes:
+            dist = node.get_dist(near)
+            if (dist < min_dist):
+                min_dist = dist
+                nearest = near
+        return nearest
 
     def get_nearest_node(self, node):
         min_dist, near_node = self.root.get_nearest_rrt_node(node)
+        if (near_node == None):
+            near_node = self.get_nearest_node_in_linear_time(node)
         return near_node
 
     def get_neighbors(self, node):
@@ -239,6 +253,6 @@ class RRTContainer(object):
         return neighborhood
 
     def add_node(self, node):
+        self.rrt_nodes.append(node)
         self.root.add_rrt_node(node)
-
 
