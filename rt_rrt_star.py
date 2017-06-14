@@ -1,17 +1,15 @@
 import random
-import time
 
 import numpy as np
 
 from collections import deque
-
 from rrt_container import RRTContainer
 from rrt_node import RRTNode
-from search   import Search
+from time import time
 
 class RTRRTStar(object):
 
-    def __init__(self, field_dim, time_limit, tag_radius, robot_radius):
+    def __init__(self, field_dim, time_limit, tag_radius, robot_radius, robot_initial_pos):
        self.field_dim = field_dim
        self.time_limit = time_limit
        self.tag_radius = tag_radius
@@ -21,7 +19,7 @@ class RTRRTStar(object):
        self.Q_s = deque()
        self.k_max = 15
        self.T = RRTContainer(field_dim, self.near_radius)
-       self.node_occupancy_grid = np.zeros((field_dim[1], field_dim[0]))
+       self.node_occ_grid = np.zeros((field_dim[1], field_dim[0]))
 
 
     def create_occupancy_grid(self, field_dim, obstacle_pos, tag_radius, robot_radius):
@@ -87,25 +85,38 @@ class RTRRTStar(object):
         return False
 
     def reconstruct_path(self):
-        pass
+        path = []
+        next_node = self.search_goal
+        while next_node.parent != None:
+            path.append(next_node)
+            next_node = next_node.parent
+        path.reverse()
+        return path
 
 
-    def get_path(self, robot_pos, obstacle_pos, goal_pos):
+    def get_path(self, robot_pos, obstacle_pos, goal_pos, num_nodes):
         self.create_occupancy_grid(self.field_dim, obstacle_pos, self.tag_radius, self.robot_radius)
-        for i in range(0, 5):
+        self.search_root = RRTNode(robot_pos)
+        self.T.add_node(self.search_root)
+        self.search_goal = RRTNode(goal_pos)
+        nodes_added = 0
+        while (self.T.get_nearest_node(self.search_goal).get_dist(self.search_goal) > self.tolerance) or (nodes_added < num_nodes):
             self.expand_rewire(self.T, self.Q_r, self.Q_s, self.k_max, self.near_radius)
+        x_end = self.T.get_nearest_node(self.search_goal)
+        self.search_goal.set_parent(x_end)
+        self.T.add_node(self.search_goal)
         return self.reconstruct_path()
     
 
     def expand_rewire(self, T, Q_r, Q_s, k_max, r_s):
         while True:
-            x_rand = Node(random.randint(0, field_dim[0] - 1), random.randint(0, field_dim[1] - 1))
-            if (self.node_occupancy_grid[x_rand.pos[1], x_rand.pos[0]] == 0) and (self.occupancy_grid[x_rand.pos[1], x_rand.pos[0]] == 0):
+            x_rand = RRTNode([random.randint(0, self.field_dim[0] - 1), random.randint(0, self.field_dim[1] - 1)])
+            if (self.node_occ_grid[x_rand.pos[1], x_rand.pos[0]] == 0) and (self.occ_grid[x_rand.pos[1], x_rand.pos[0]] == 0):
                 break
         x_closest = T.get_nearest_node(x_rand)
         if not self.occupied(x_closest, x_rand):
             X_near = T.get_neighbors(x_rand)
-            if (len(X_near) < k_max) or (x_rand.get_distance(x_closest) > r_s):
+            if (len(X_near) < k_max) or (x_rand.get_dist(x_closest) > r_s):
                 self.add_node_to_tree(T, x_rand, x_closest, X_near)
                 Q_r.appendleft(x_rand)
             else:
@@ -116,9 +127,9 @@ class RTRRTStar(object):
 
     def add_node_to_tree(self, T, x_new, x_closest, X_near):
         x_min = x_closest
-        c_min = x_closest.cost + x_closest.get_distance(x_new)
+        c_min = x_closest.cost + x_closest.get_dist(x_new)
         for x_near in X_near:
-            c_new = x_near.cost + x_near.get_distance(x_new)
+            c_new = x_near.cost + x_near.get_dist(x_new)
             if (c_new < c_min) and (not self.occupied(x_near, x_new)):
                 c_min = c_new
                 x_min = x_near
@@ -135,7 +146,7 @@ class RTRRTStar(object):
             X_near = T.get_neighbors(x_r)
             for x_near in X_near:
                 c_old = x_near.cost
-                c_new = x_r.cost + x_r.get_distance(x_near)
+                c_new = x_r.cost + x_r.get_dist(x_near)
                 if (c_new < c_old) and (not self.occupied(x_r, x_near)):
                     x_near.set_parent(x_r)
                     Q_r.append(x_near)
@@ -144,15 +155,15 @@ class RTRRTStar(object):
     def rewire_from_root(self, Q_s, T):
         start_time = time()
         if (len(Q_s) == 0):
-            # append root to Q_s
+            Q_s.append(self.search_root)
         rewired_nodes = set(Q_s)
-        while (time() - start_time < self.time_limit) and (len(Q_r) > 0):
+        while (time() - start_time < self.time_limit) and (len(Q_s) > 0):
             x_s = Q_s.popleft()
             X_near = T.get_neighbors(x_s)
             for x_near in X_near:
                 c_old = x_near.cost
-                c_new = x_s.cost + x_s.get_distance(x_near)
-                if (c_new < c_old) and (not occupied(x_r, x_near):
+                c_new = x_s.cost + x_s.get_dist(x_near)
+                if (c_new < c_old) and (not occupied(x_r, x_near)):
                     x_near.set_parent(x_s)
                 if not x_near in rewired_nodes:
                     Q_s.append(x_near)

@@ -15,6 +15,6 @@ class RRTNode(Node):
         self.parent = node
         self.cost = node.cost + self.get_dist(node)
 
-    def get_distance(self, node):
-        return super(RRTNode, self).get_distance(node)
+    def get_dist(self, node):
+        return super(RRTNode, self).get_dist(node)
 
