@@ -1,4 +1,5 @@
 import random
+import sys
 
 import numpy as np
 
@@ -9,7 +10,7 @@ from time import time
 
 class RTRRTStar(object):
 
-    def __init__(self, field_dim, time_limit, tag_radius, robot_radius, robot_initial_pos):
+    def __init__(self, field_dim, time_limit, tag_radius, robot_radius, robot_initial_pos, tolerance):
        self.field_dim = field_dim
        self.time_limit = time_limit
        self.tag_radius = tag_radius
@@ -18,6 +19,7 @@ class RTRRTStar(object):
        self.Q_r = deque()
        self.Q_s = deque()
        self.k_max = 15
+       self.tolerance = tolerance
        self.T = RRTContainer(field_dim, self.near_radius)
        self.node_occ_grid = np.zeros((field_dim[1], field_dim[0]))
 
@@ -50,7 +52,7 @@ class RTRRTStar(object):
             delta_a = deltax
             delta_b = deltay
             deltaerr = abs(deltay / deltax)
-        else:
+        elif (abs(deltax) < abs(deltay)):
             a_first = True
             a0 = y0
             a1 = y1
@@ -59,6 +61,8 @@ class RTRRTStar(object):
             delta_a = deltay
             delta_b = deltax
             deltaerr = abs(deltax / deltay)
+        else:
+            return False
 
         b_increment = 1
         if (delta_b < 0):
@@ -87,9 +91,10 @@ class RTRRTStar(object):
     def reconstruct_path(self):
         path = []
         next_node = self.search_goal
+        path.append(next_node.pos)
         while next_node.parent != None:
-            path.append(next_node)
             next_node = next_node.parent
+            path.append(next_node.pos)
         path.reverse()
         return path
 
@@ -102,9 +107,14 @@ class RTRRTStar(object):
         nodes_added = 0
         while (self.T.get_nearest_node(self.search_goal).get_dist(self.search_goal) > self.tolerance) or (nodes_added < num_nodes):
             self.expand_rewire(self.T, self.Q_r, self.Q_s, self.k_max, self.near_radius)
+            nodes_added += 1
         x_end = self.T.get_nearest_node(self.search_goal)
-        self.search_goal.set_parent(x_end)
-        self.T.add_node(self.search_goal)
+        if self.node_occ_grid[self.search_goal.pos[1], self.search_goal.pos[0]] == 0:
+            self.search_goal.set_parent(x_end)
+            self.T.add_node(self.search_goal)
+            self.node_occ_grid[self.search_goal.pos[1], self.search_goal.pos[0]] = 1
+        else:
+            self.search_goal = self.T.get_nearest_node(self.search_goal)
         return self.reconstruct_path()
     
 
@@ -135,6 +145,7 @@ class RTRRTStar(object):
                 x_min = x_near
         # add vertex to tree
         T.add_node(x_new)
+        self.node_occ_grid[x_new.pos[1], x_new.pos[0]] = 1
         # add edge to tree
         x_new.set_parent(x_min)
 
