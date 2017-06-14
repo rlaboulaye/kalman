@@ -193,10 +193,11 @@ class SpatialNode(object):
             nearest = None
             min_dist = 1000000
             for near in self.nodes:
-                dist = node.get_dist(near)
-                if (dist < min_dist):
-                    min_dist = dist
-                    nearest = near
+                if (node != near):
+                    dist = node.get_dist(near)
+                    if (dist < min_dist):
+                        min_dist = dist
+                        nearest = near
             if (include_neighbor_spaces):
                 neighbor_indices = self.get_neighbor_indices(node, min_dist)
                 for index in neighbor_indices:
@@ -213,9 +214,10 @@ class SpatialNode(object):
             return self.children[child_index].get_neighbors(node, neighborhood)
         else:
             for near in self.nodes:
-                dist = node.get_dist(near)
-                if (dist <= self.near_radius):
-                    neighborhood.append(near)
+                if (node != near):
+                    dist = node.get_dist(near)
+                    if (dist <= self.near_radius):
+                        neighborhood.append(near)
             if (include_neighbor_spaces):
                 neighbor_indices = self.get_neighbor_indices(node, self.near_radius)
                 for index in neighbor_indices:
