@@ -15,12 +15,12 @@ class RTRRTStar(object):
        self.time_limit = time_limit
        self.tag_radius = tag_radius
        self.robot_radius = robot_radius
-       self.near_radius = 50
+       self.near_radius = 60
        self.Q_r = deque()
        self.Q_s = deque()
        self.k_max = 15
        self.tolerance = tolerance
-       self.T = RRTContainer(field_dim, self.near_radius)
+       self.T = RRTContainer(field_dim, self.near_radius, max_depth = 5)
        self.node_occ_grid = np.zeros((field_dim[1], field_dim[0]))
 
 
@@ -132,7 +132,7 @@ class RTRRTStar(object):
             else:
                 Q_r.appendleft(x_closest)
             self.rewire_random_nodes(Q_r, T)
-        self.rewire_from_root(Q_s, T)
+            self.rewire_from_root(Q_s, T)
 
 
     def add_node_to_tree(self, T, x_new, x_closest, X_near):
@@ -174,7 +174,7 @@ class RTRRTStar(object):
             for x_near in X_near:
                 c_old = x_near.cost
                 c_new = x_s.cost + x_s.get_dist(x_near)
-                if (c_new < c_old) and (not occupied(x_r, x_near)):
+                if (c_new < c_old) and (not self.occupied(x_s, x_near)):
                     x_near.set_parent(x_s)
                 if not x_near in rewired_nodes:
                     Q_s.append(x_near)
