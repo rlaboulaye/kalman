@@ -55,10 +55,13 @@ def main(host, port):
             if ('orientation' in robot_dic):
                 robot_direction = robot_dic['orientation']
                 robot_position = robot_dic['center']
+                print()
+                print('observed: ', robot_position)
                 average_speed = (speed_dic['speed_a'] + speed_dic['speed_b']) / 2
                 robot_direction_unit = np.array(robot_direction) / np.linalg.norm(np.array(robot_direction))
-                speed = average_speed * robot_direction
+                speed = average_speed * robot_direction_unit
                 robot_position = kalman_filter.get_position(robot_position, speed)
+                print('predicted: ', robot_position)
                 force = [0, 0]
                 force = np.add(force, field_dic[waypoint].get_vector(robot_position, waypoint_position))
                 for tag_key in others_dic:
