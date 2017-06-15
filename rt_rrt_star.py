@@ -10,7 +10,7 @@ from time import time
 
 class RTRRTStar(object):
 
-    def __init__(self, field_dim, time_limit, tag_radius, robot_radius, robot_initial_pos, tolerance):
+    def __init__(self, field_dim, time_limit, tag_radius, robot_radius, tolerance):
        self.field_dim = field_dim
        self.time_limit = time_limit
        self.tag_radius = tag_radius
