@@ -67,7 +67,7 @@ def main(host, port):
                 not_in_radius = distance_to_goal > waypoint_radius
         #do('speed 0 0')
 
-     def approach_waypoint(waypoint_position, goal, tag_radius):
+    def approach_waypoint(waypoint_position, goal, tag_radius):
         max_force = 2
         waypoint_radius = tag_radius * 2
         res = do('where others')
@@ -169,7 +169,7 @@ def main(host, port):
                 not_at_goal = distance_to_goal > tag_radius * 2
  
         else:
-           searcher = search_strategy(field_dim, tag_radius, robot_radius)
+            searcher = search_strategy(field_dim, tag_radius, robot_radius)
             waypoints = searcher.get_path(robot_position, goal_position, obstacle_pos, unit_length)
             for waypoint in waypoints:
                 follow_waypoint(waypoint, goal, tag_radius)
@@ -184,7 +184,7 @@ def main(host, port):
     goal = '6'
     unit_length = 30
     # search_strategy = RRTSearch
-    search_strategy = AStar
+    search_strategy = RTRRTStar
     # search_strategy = RRTStar
 
     solve_maze(search_strategy, field_dim, goal, unit_length)
