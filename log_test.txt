@@ -1,0 +1,720 @@
+rdefig@zion:~$ cd development/cs470/kalman/
+rdefig@zion:~/development/cs470/kalman$ ls
+a_star.py             controller_old.py       kalman.py  node.pyc           position_container.py  random_field.py     rrt_container.py   rrt_node.pyc   rt_rrt_star.py   tangential_field.py  wheel_speed.py
+attractive_field.py   controller.py           log.txt    path_container.py  potential_field.py     README              rrt_container.pyc  rrt_search.py  rt_rrt_star.pyc  test_container.py
+controller_kalman.py  controller_realtime.py  node.py    pathfinder.py      __pycache__            repulsive_field.py  rrt_node.py        rrt_star.py    search.py        test_search.py
+rdefig@zion:~/development/cs470/kalman$ python test_search.py 
+Traceback (most recent call last):
+  File "test_search.py", line 10, in <module>
+    searcher = RTRRTStar(field_dim, time_limit, tag_radius, robot_radius, robot_initial_pos, 50)
+NameError: name 'robot_initial_pos' is not defined
+rdefig@zion:~/development/cs470/kalman$ python test_search.py 
+Traceback (most recent call last):
+  File "test_search.py", line 10, in <module>
+    searcher = RTRRTStar(field_dim, time_limit, tag_radius, robot_radius, robot_initial_pos, 50)
+NameError: name 'robot_initial_pos' is not defined
+rdefig@zion:~/development/cs470/kalman$ python test_search.py 
+('iteration: ', 0)
+Traceback (most recent call last):
+  File "test_search.py", line 32, in <module>
+    path = searcher.get_path(robot_pos, obstacle_pos, goal_pos, 10)
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 109, in get_path
+    self.expand_rewire(self.T, self.Q_r, self.Q_s, self.k_max, self.near_radius)
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 127, in expand_rewire
+    if not self.occupied(x_closest, x_rand):
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 83, in occupied
+    if (self.occ_grid[int(b),int(a)] == 1):
+IndexError: index 1080 is out of bounds for axis 0 with size 1080
+rdefig@zion:~/development/cs470/kalman$ python3 test_search.py 
+Traceback (most recent call last):
+  File "test_search.py", line 1, in <module>
+    from rt_rrt_star import RTRRTStar
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 4, in <module>
+    import numpy as np
+ImportError: No module named 'numpy'
+rdefig@zion:~/development/cs470/kalman$ python3 test_search.py 
+Traceback (most recent call last):                                                                                                                                                                                                          
+  File "test_search.py", line 1, in <module>                                                                                                                                                                                                
+    from rt_rrt_star import RTRRTStar                                                                                                                                                                                                       
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 4, in <module>                                                                                                                                              
+    import numpy as np                                                                                                                                                                                                                      
+ImportError: No module named 'numpy'                                                                                                                                                                                                        
+rdefig@zion:~/development/cs470/kalman$ source /users/groups/cs470ta/public/cs470venv/bin/activate
+(cs470venv) rdefig@zion:~/development/cs470/kalman$ python test_search.py 
+iteration:  0                                                                                                                                                                                                                               
+[[51, 51], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]                                                                                                                                                                          
+0.007906913757324219                                                                                                                                                                                                                        
+0.007906913757324219                                                                                                                                                                                                                        
+iteration:  1                                                                                                                                                                                                                               
+[[52, 52], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]                                                                                                                                                                          
+0.005774259567260742                                                                                                                                                                                                                        
+0.013681173324584961                                                                                                                                                                                                                        
+iteration:  2                                                                                                                                                                                                                               
+[[53, 53], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]                                                                                                                                                                          
+0.007619380950927734                                                                                                                                                                                                                        
+0.021300554275512695                                                                                                                                                                                                                        
+iteration:  3                                                                                                                                                                                                                               
+[[54, 54], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]                                                                                                                                                                          
+0.006485939025878906                                                                                                                                                                                                                        
+0.0277864933013916                                                                                                                                                                                                                          
+iteration:  4                                                                                                                                                                                                                               
+[[55, 55], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]                                                                                                                                                                          
+0.007550477981567383                                                                                                                                                                                                                        
+0.035336971282958984                                                                                                                                                                                                                        
+iteration:  5                                                                                                                                                                                                                               
+[[56, 56], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]                                                                                                                                                                          
+0.00978231430053711                                                                                                                                                                                                                         
+0.045119285583496094                                                                                                                                                                                                                        
+iteration:  6                                                                                                                                                                                                                               
+[[57, 57], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]                                                                                                                                                                          
+0.010935306549072266                                                                                                                                                                                                                        
+0.05605459213256836                                                                                                                                                                                                                         
+iteration:  7                                                                                                                                                                                                                               
+[[58, 58], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]                                                                                                                                                                          
+0.01121830940246582                                                                                                                                                                                                                         
+0.06727290153503418                                                                                                                                                                                                                         
+iteration:  8                                                                                                                                                                                                                               
+[[59, 59], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]                                                                                                                                                                          
+0.012327194213867188
+0.07960009574890137
+iteration:  9
+[[60, 60], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.013466358184814453
+0.09306645393371582
+iteration:  10
+[[61, 61], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.015958070755004883
+0.1090245246887207
+iteration:  11
+[[62, 62], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.01825714111328125
+0.12728166580200195
+iteration:  12
+[[63, 63], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.019833803176879883
+0.14711546897888184
+iteration:  13
+[[64, 64], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.021233797073364258
+0.1683492660522461
+iteration:  14
+[[65, 65], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.024713516235351562
+0.19306278228759766
+iteration:  15
+[[66, 66], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.024763107299804688
+0.21782588958740234
+iteration:  16
+[[67, 67], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.025750398635864258
+0.2435762882232666
+iteration:  17
+[[68, 68], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.02726912498474121
+0.2708454132080078
+iteration:  18
+[[69, 69], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.028766632080078125
+0.29961204528808594
+iteration:  19
+[[70, 70], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.030002593994140625
+0.32961463928222656
+iteration:  20
+[[71, 71], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.03174901008605957
+0.36136364936828613
+iteration:  21
+[[72, 72], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.033197879791259766
+0.3945615291595459
+iteration:  22
+[[73, 73], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.03547072410583496
+0.43003225326538086
+iteration:  23
+[[74, 74], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.03735995292663574
+0.4673922061920166
+iteration:  24
+[[75, 75], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.038953542709350586
+0.5063457489013672
+iteration:  25
+[[76, 76], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.04179978370666504
+0.5481455326080322
+iteration:  26
+[[77, 77], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.04345989227294922
+0.5916054248809814
+iteration:  27
+[[78, 78], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.045221805572509766
+0.6368272304534912
+iteration:  28
+[[79, 79], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.047643423080444336
+0.6844706535339355
+iteration:  29
+[[80, 80], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.049077510833740234
+0.7335481643676758
+iteration:  30
+[[81, 81], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.05144548416137695
+0.7849936485290527
+iteration:  31
+[[82, 82], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.05190253257751465
+0.8368961811065674
+iteration:  32
+[[83, 83], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.05378007888793945
+0.8906762599945068
+iteration:  33
+[[84, 84], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.05572390556335449
+0.9464001655578613
+iteration:  34
+[[85, 85], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.05790972709655762
+1.004309892654419
+iteration:  35
+[[86, 86], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.06098175048828125
+1.0652916431427002
+iteration:  36
+[[87, 87], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.0651543140411377
+1.130445957183838
+iteration:  37
+[[88, 88], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.06686973571777344
+1.1973156929016113
+iteration:  38
+[[89, 89], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.06866097450256348
+1.2659766674041748
+iteration:  39
+[[90, 90], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.0705878734588623
+1.336564540863037
+iteration:  40
+[[91, 91], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.07347512245178223
+1.4100396633148193
+iteration:  41
+[[92, 92], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.08445382118225098
+1.4944934844970703
+iteration:  42
+[[93, 93], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.08620548248291016
+1.5806989669799805
+iteration:  43
+[[94, 94], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.08943867683410645
+1.670137643814087
+iteration:  44
+[[95, 95], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.09171247482299805
+1.761850118637085
+iteration:  45
+[[96, 96], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.09865069389343262
+1.8605008125305176
+iteration:  46
+[[97, 97], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.10004591941833496
+1.9605467319488525
+iteration:  47
+[[98, 98], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.10777401924133301
+2.0683207511901855
+iteration:  48
+[[99, 99], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.10914230346679688
+2.1774630546569824
+iteration:  49
+[[100, 100], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.11215496063232422
+2.2896180152893066
+iteration:  50
+[[101, 101], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.11398863792419434
+2.403606653213501
+iteration:  51
+[[102, 102], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.11743783950805664
+2.5210444927215576
+iteration:  52
+[[103, 103], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.12039923667907715
+2.6414437294006348
+iteration:  53
+[[104, 104], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.124847412109375
+2.7662911415100098
+iteration:  54
+[[105, 105], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.133941650390625
+2.9002327919006348
+iteration:  55
+[[106, 106], [1096, 1064], [1650, 1068], [1827, 1026], [1870, 1030]]
+0.13697409629821777
+3.0372068881988525
+iteration:  56
+^CTraceback (most recent call last):
+  File "test_search.py", line 32, in <module>
+    path = searcher.get_path(robot_pos, obstacle_pos, goal_pos, 10)
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 109, in get_path
+    self.expand_rewire(self.T, self.Q_r, self.Q_s, self.k_max, self.near_radius)
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 135, in expand_rewire
+    self.rewire_from_root(Q_s, T)
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 173, in rewire_from_root
+    X_near = T.get_neighbors(x_s)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 254, in get_neighbors
+    self.root.get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 214, in get_neighbors
+    return self.children[child_index].get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 214, in get_neighbors
+    return self.children[child_index].get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 214, in get_neighbors
+    return self.children[child_index].get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 214, in get_neighbors
+    return self.children[child_index].get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 222, in get_neighbors
+    neighbor_indices = self.get_neighbor_indices(node, self.near_radius)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 172, in get_neighbor_indices
+    dist = self.dist_to_line(self.brc, self.blc, np.array(node.pos))
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 138, in dist_to_line
+    dist = self.get_dist(pt, pt_on_line)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 178, in get_dist
+    dist = math.sqrt(((pos1[0] - pos2[0]) ** 2) + ((pos1[1] - pos2[1]) ** 2))
+KeyboardInterrupt
+(cs470venv) rdefig@zion:~/development/cs470/kalman$ 
+(cs470venv) rdefig@zion:~/development/cs470/kalman$ atom .
+(cs470venv) rdefig@zion:~/development/cs470/kalman$ 
+(cs470venv) rdefig@zion:~/development/cs470/kalman$ 
+(cs470venv) rdefig@zion:~/development/cs470/kalman$ 
+(cs470venv) rdefig@zion:~/development/cs470/kalman$ python test_search.py 
+iteration:  0
+SEARCH ROBOT POSITION:
+[51, 51]
+SEARCH ROOT POSITION:
+[51, 51]
+[[51, 51], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.14252805709838867
+0.14252805709838867
+iteration:  1
+SEARCH ROBOT POSITION:
+[52, 52]
+SEARCH ROOT POSITION:
+[52, 52]
+[[52, 52], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.009087562561035156
+0.15161561965942383
+iteration:  2
+SEARCH ROBOT POSITION:
+[53, 53]
+SEARCH ROOT POSITION:
+[53, 53]
+[[53, 53], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.010307550430297852
+0.16192317008972168
+iteration:  3
+SEARCH ROBOT POSITION:
+[54, 54]
+SEARCH ROOT POSITION:
+[54, 54]
+[[54, 54], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.011529922485351562
+0.17345309257507324
+iteration:  4
+SEARCH ROBOT POSITION:
+[55, 55]
+SEARCH ROOT POSITION:
+[55, 55]
+[[55, 55], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.012457609176635742
+0.18591070175170898
+iteration:  5
+SEARCH ROBOT POSITION:
+[56, 56]
+SEARCH ROOT POSITION:
+[56, 56]
+[[56, 56], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.01656031608581543
+0.20247101783752441
+iteration:  6
+SEARCH ROBOT POSITION:
+[57, 57]
+SEARCH ROOT POSITION:
+[57, 57]
+[[57, 57], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.017881155014038086
+0.2203521728515625
+iteration:  7
+SEARCH ROBOT POSITION:
+[58, 58]
+SEARCH ROOT POSITION:
+[58, 58]
+[[58, 58], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.018741130828857422
+0.23909330368041992
+iteration:  8
+SEARCH ROBOT POSITION:
+[59, 59]
+SEARCH ROOT POSITION:
+[59, 59]
+[[59, 59], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.02044820785522461
+0.25954151153564453
+iteration:  9
+SEARCH ROBOT POSITION:
+[60, 60]
+SEARCH ROOT POSITION:
+[60, 60]
+[[60, 60], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.023150205612182617
+0.28269171714782715
+iteration:  10
+SEARCH ROBOT POSITION:
+[61, 61]
+SEARCH ROOT POSITION:
+[61, 61]
+[[61, 61], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.02284526824951172
+0.30553698539733887
+iteration:  11
+SEARCH ROBOT POSITION:
+[62, 62]
+SEARCH ROOT POSITION:
+[62, 62]
+[[62, 62], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.02317667007446289
+0.32871365547180176
+iteration:  12
+SEARCH ROBOT POSITION:
+[63, 63]
+SEARCH ROOT POSITION:
+[63, 63]
+[[63, 63], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.025393009185791016
+0.3541066646575928
+iteration:  13
+SEARCH ROBOT POSITION:
+[64, 64]
+SEARCH ROOT POSITION:
+[64, 64]
+[[64, 64], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.027858972549438477
+0.38196563720703125
+iteration:  14
+SEARCH ROBOT POSITION:
+[65, 65]
+SEARCH ROOT POSITION:
+[65, 65]
+[[65, 65], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.027829885482788086
+0.40979552268981934
+iteration:  15
+SEARCH ROBOT POSITION:
+[66, 66]
+SEARCH ROOT POSITION:
+[66, 66]
+[[66, 66], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.029507160186767578
+0.4393026828765869
+iteration:  16
+SEARCH ROBOT POSITION:
+[67, 67]
+SEARCH ROOT POSITION:
+[67, 67]
+[[67, 67], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.03163290023803711
+0.470935583114624
+iteration:  17
+SEARCH ROBOT POSITION:
+[68, 68]
+SEARCH ROOT POSITION:
+[68, 68]
+[[68, 68], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.03327035903930664
+0.5042059421539307
+iteration:  18
+SEARCH ROBOT POSITION:
+[69, 69]
+SEARCH ROOT POSITION:
+[69, 69]
+[[69, 69], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.03406071662902832
+0.538266658782959
+iteration:  19
+SEARCH ROBOT POSITION:
+[70, 70]
+SEARCH ROOT POSITION:
+[70, 70]
+[[70, 70], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.03692269325256348
+0.5751893520355225
+iteration:  20
+SEARCH ROBOT POSITION:
+[71, 71]
+SEARCH ROOT POSITION:
+[71, 71]
+[[71, 71], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.03827095031738281
+0.6134603023529053
+iteration:  21
+SEARCH ROBOT POSITION:
+[72, 72]
+SEARCH ROOT POSITION:
+[72, 72]
+[[72, 72], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.03950643539428711
+0.6529667377471924
+iteration:  22
+SEARCH ROBOT POSITION:
+[73, 73]
+SEARCH ROOT POSITION:
+[73, 73]
+[[73, 73], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.04201245307922363
+0.694979190826416
+iteration:  23
+SEARCH ROBOT POSITION:
+[74, 74]
+SEARCH ROOT POSITION:
+[74, 74]
+[[74, 74], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.04375147819519043
+0.7387306690216064
+iteration:  24
+SEARCH ROBOT POSITION:
+[75, 75]
+SEARCH ROOT POSITION:
+[75, 75]
+[[75, 75], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.04521584510803223
+0.7839465141296387
+iteration:  25
+SEARCH ROBOT POSITION:
+[76, 76]
+SEARCH ROOT POSITION:
+[76, 76]
+[[76, 76], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.04801297187805176
+0.8319594860076904
+iteration:  26
+SEARCH ROBOT POSITION:
+[77, 77]
+SEARCH ROOT POSITION:
+[77, 77]
+[[77, 77], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.052341461181640625
+0.884300947189331
+iteration:  27
+SEARCH ROBOT POSITION:
+[78, 78]
+SEARCH ROOT POSITION:
+[78, 78]
+[[78, 78], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.054010868072509766
+0.9383118152618408
+iteration:  28
+SEARCH ROBOT POSITION:
+[79, 79]
+SEARCH ROOT POSITION:
+[79, 79]
+[[79, 79], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.05485796928405762
+0.9931697845458984
+iteration:  29
+SEARCH ROBOT POSITION:
+[80, 80]
+SEARCH ROOT POSITION:
+[80, 80]
+[[80, 80], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.05687856674194336
+1.0500483512878418
+iteration:  30
+SEARCH ROBOT POSITION:
+[81, 81]
+SEARCH ROOT POSITION:
+[81, 81]
+[[81, 81], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.05997276306152344
+1.1100211143493652
+iteration:  31
+SEARCH ROBOT POSITION:
+[82, 82]
+SEARCH ROOT POSITION:
+[82, 82]
+[[82, 82], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.06301140785217285
+1.173032522201538
+iteration:  32
+SEARCH ROBOT POSITION:
+[83, 83]
+SEARCH ROOT POSITION:
+[83, 83]
+[[83, 83], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.06465673446655273
+1.2376892566680908
+iteration:  33
+SEARCH ROBOT POSITION:
+[84, 84]
+SEARCH ROOT POSITION:
+[84, 84]
+[[84, 84], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.06645417213439941
+1.3041434288024902
+iteration:  34
+SEARCH ROBOT POSITION:
+[85, 85]
+SEARCH ROOT POSITION:
+[85, 85]
+[[85, 85], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.06828451156616211
+1.3724279403686523
+iteration:  35
+SEARCH ROBOT POSITION:
+[86, 86]
+SEARCH ROOT POSITION:
+[86, 86]
+[[86, 86], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.07304096221923828
+1.4454689025878906
+iteration:  36
+SEARCH ROBOT POSITION:
+[87, 87]
+SEARCH ROOT POSITION:
+[87, 87]
+[[87, 87], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.0769655704498291
+1.5224344730377197
+iteration:  37
+SEARCH ROBOT POSITION:
+[88, 88]
+SEARCH ROOT POSITION:
+[88, 88]
+[[88, 88], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.07880234718322754
+1.6012368202209473
+iteration:  38
+SEARCH ROBOT POSITION:
+[89, 89]
+SEARCH ROOT POSITION:
+[89, 89]
+[[89, 89], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.08034038543701172
+1.681577205657959
+iteration:  39
+SEARCH ROBOT POSITION:
+[90, 90]
+SEARCH ROOT POSITION:
+[90, 90]
+[[90, 90], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.08259892463684082
+1.7641761302947998
+iteration:  40
+SEARCH ROBOT POSITION:
+[91, 91]
+SEARCH ROOT POSITION:
+[91, 91]
+[[91, 91], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.08502793312072754
+1.8492040634155273
+iteration:  41
+SEARCH ROBOT POSITION:
+[92, 92]
+SEARCH ROOT POSITION:
+[92, 92]
+[[92, 92], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.08804488182067871
+1.937248945236206
+iteration:  42
+SEARCH ROBOT POSITION:
+[93, 93]
+SEARCH ROOT POSITION:
+[93, 93]
+[[93, 93], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.09622526168823242
+2.0334742069244385
+iteration:  43
+SEARCH ROBOT POSITION:
+[94, 94]
+SEARCH ROOT POSITION:
+[94, 94]
+[[94, 94], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.09795188903808594
+2.1314260959625244
+iteration:  44
+SEARCH ROBOT POSITION:
+[95, 95]
+SEARCH ROOT POSITION:
+[95, 95]
+[[95, 95], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.09766197204589844
+2.229088068008423
+iteration:  45
+SEARCH ROBOT POSITION:
+[96, 96]
+SEARCH ROOT POSITION:
+[96, 96]
+[[96, 96], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.1011648178100586
+2.3302528858184814
+iteration:  46
+SEARCH ROBOT POSITION:
+[97, 97]
+SEARCH ROOT POSITION:
+[97, 97]
+[[97, 97], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.10220575332641602
+2.4324586391448975
+iteration:  47
+SEARCH ROBOT POSITION:
+[98, 98]
+SEARCH ROOT POSITION:
+[98, 98]
+[[98, 98], [1868, 548], [1657, 647], [1428, 561], [1413, 684], [1436, 823], [1653, 992], [1694, 911], [1882, 977], [1844, 1002], [1870, 1030]]
+0.10867977142333984
+2.5411384105682373
+iteration:  48
+SEARCH ROBOT POSITION:
+[99, 99]
+SEARCH ROOT POSITION:
+[99, 99]
+^CTraceback (most recent call last):
+  File "test_search.py", line 32, in <module>
+    path = searcher.get_path(robot_pos, obstacle_pos, goal_pos, 10)
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 113, in get_path
+    self.expand_rewire(self.T, self.Q_r, self.Q_s, self.k_max, self.near_radius)
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 139, in expand_rewire
+    self.rewire_from_root(Q_s, T)
+  File "/users/researcher/rdefig/development/cs470/kalman/rt_rrt_star.py", line 177, in rewire_from_root
+    X_near = T.get_neighbors(x_s)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 254, in get_neighbors
+    self.root.get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 214, in get_neighbors
+    return self.children[child_index].get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 214, in get_neighbors
+    return self.children[child_index].get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 214, in get_neighbors
+    return self.children[child_index].get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 214, in get_neighbors
+    return self.children[child_index].get_neighbors(node, neighborhood)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 225, in get_neighbors
+    self.neighbors[index].get_neighbors(node, neighborhood, include_neighbor_spaces=False)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_container.py", line 218, in get_neighbors
+    dist = node.get_dist(near)
+  File "/users/researcher/rdefig/development/cs470/kalman/rrt_node.py", line 19, in get_dist
+    return super(RRTNode, self).get_dist(node)
+  File "/users/researcher/rdefig/development/cs470/kalman/node.py", line 9, in get_dist
+    dist = math.sqrt(((self.pos[0] - node.pos[0]) ** 2) + ((self.pos[1] - node.pos[1]) ** 2))
+KeyboardInterrupt
+(cs470venv) rdefig@zion:~/development/cs470/kalman$ 

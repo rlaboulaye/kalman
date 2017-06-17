@@ -105,6 +105,7 @@ def main(host, port):
                 robot_direction = robot_dic['orientation']
                 robot_position = robot_dic['center']
                 print('SET ROBOT POSITION')
+                print(robot_position)
                 pos_container.set_robot_position(robot_position)
                 print('FINISHED SETTING ROBOT POSITION')
                 force = [0, 0]
@@ -192,6 +193,7 @@ def main(host, port):
                 path = path_container.get_path()
                 if path == None:
                     continue
+                del path[0]
                 for waypoint in path:
                     approach_waypoint(waypoint, goal, tag_radius, path_container, pos_container)
                     if path_container.is_changed():

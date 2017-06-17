@@ -29,8 +29,12 @@ class PositionContainer(object):
 
 
     def set_robot_position(self, robot_pos):
+        print('SETTING ROBOT POSITION:')
+        print(robot_pos)
         self.lock.acquire()
         self.robot_pos = robot_pos
+        print('SELF.ROBOT_POS:')
+        print(self.robot_pos)
         self.lock.release()
 
 
