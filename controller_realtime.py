@@ -151,7 +151,7 @@ def main(host, port):
 
 
         if search_strategy == RTRRTStar:
-            time_limit = 0
+            time_limit = 0.05
 
             searcher = search_strategy(field_dim, time_limit, tag_radius, robot_radius, 50)
             path_container = PathContainer()
