@@ -1,10 +1,11 @@
 from math import sin, cos, pi
 import numpy as np
 
-def step(self, mu_t, E_t, F, E_x, H, E_z, z_tp1):
+def step(mu_t, E_t, E_x, H, E_z, z_tp1, delta_t):
+    F = get_jacobian(mu_t, delta_t)
     identity_dim = F.shape[0]
     K_tp1 = np.dot(np.dot(np.add(np.dot(np.dot(F, E_t), F.T), E_x), H.T), np.linalg.inv(np.add(np.dot(np.dot(H, np.add(np.dot(np.dot(F, E_t), F.T), E_x)), H.T), E_z)))
-    mu_tp1 = np.add(np.dot(F, mu_t), np.dot(K_tp1, np.subtract(z_tp1, np.dot(H, np.dot(F, mu_t)))))
+    mu_tp1 = np.add(apply_f(mu_t, delta_t), np.dot(K_tp1, np.subtract(z_tp1, np.dot(H, np.dot(F, mu_t)))))
     E_tp1 = np.dot(np.subtract(np.identity(identity_dim), np.dot(K_tp1, H)), np.add(np.dot(F, np.dot(E_t, F.T)), E_x))
     return (mu_tp1, E_tp1)
 
@@ -58,7 +59,7 @@ def get_jacobian(mu_t, delta_t):
     jac[0,0] = 1
     jac[0,1] = 0
     jac[0,2] = ((delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * b * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta)))) / (2 * (vr - vl) ** 2)
-    jac[0,3] = ((2 * b * vr * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta))) - (delta_t * cos((dekta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2) 
+    jac[0,3] = ((2 * b * vr * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta))) - (delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2) 
     jac[0,4] = 0
     jac[0,5] = 0
     jac[0,6] = b * (vr + vl) * (cos(delta_t * (vr - vl) / b) * cos(theta) - cos(theta) - sin(delta_t * (vr - vl) / b) * sin(theta)) / (2 * (vr - vl))
@@ -71,45 +72,47 @@ def get_jacobian(mu_t, delta_t):
     jac[1,5] = 0
     jac[1,6] = b * (vr + vl) * ((sin(delta_t * (vr - vl) / b) * cos(theta)) + (cos(delta_t * (vr - vl) / b) * sin(theta)) - sin(theta)) / (2 * (vr - vl))
 
-    jac[2,0] = 
-    jac[2,1] = 
-    jac[2,2] = 
-    jac[2,3] = 
-    jac[2,4] = 
-    jac[2,5] = 
-    jac[2,6] = 
+    jac[2,0] = 0
+    jac[2,1] = 0
+    jac[2,2] = 1
+    jac[2,3] = 0
+    jac[2,4] = delta_t
+    jac[2,5] = 0
+    jac[2,6] = 0
 
-    jac[3,0] = 
-    jac[3,1] = 
-    jac[3,2] = 
-    jac[3,3] = 
-    jac[3,4] = 
-    jac[3,5] = 
-    jac[3,6] = 
+    jac[3,0] = 0
+    jac[3,1] = 0
+    jac[3,2] = 0
+    jac[3,3] = 1
+    jac[3,4] = 0
+    jac[3,5] = delta_t
+    jac[3,6] = 0
 
-    jac[4,0] = 
-    jac[4,1] = 
-    jac[4,2] = 
-    jac[4,3] = 
-    jac[4,4] = 
-    jac[4,5] = 
-    jac[4,6] = 
+    jac[4,0] = 0
+    jac[4,1] = 0
+    jac[4,2] = 0
+    jac[4,3] = 0
+    jac[4,4] = 1
+    jac[4,5] = 0
+    jac[4,6] = 0
 
-    jac[5,0] = 
-    jac[5,1] = 
-    jac[5,2] = 
-    jac[5,3] = 
-    jac[5,4] = 
-    jac[5,5] = 
-    jac[5,6] = 
+    jac[5,0] = 0
+    jac[5,1] = 0
+    jac[5,2] = 0
+    jac[5,3] = 0
+    jac[5,4] = 0
+    jac[5,5] = 1
+    jac[5,6] = 0
 
-    jac[6,0] = 
-    jac[6,1] = 
-    jac[6,2] = 
-    jac[6,3] = 
-    jac[6,4] = 
-    jac[6,5] = 
-    jac[6,6] = 
+    jac[6,0] = 0
+    jac[6,1] = 0
+    jac[6,2] = delta_t / b
+    jac[6,3] = - delta_t / b
+    jac[6,4] = 0
+    jac[6,5] = 0
+    jac[6,6] = 1
+
+    return jac
 
 # px, py, vr, vl, ar, al
 E_x = np.array([[1, 0, 0, 0, 0, 0, 0],[1, 0, 0, 0, 0, 0, 0],[0, 0, 5, 0, 0, 0, 0],[0, 0, 0, 5, 0, 0, 0],[0, 0, 0, 0, 10, 0, 0],[0, 0, 0, 0, 0, 10, 0],[0, 0, 0, 0, 0, 0, .3]])
@@ -119,10 +122,19 @@ E_z = np.array([[5, 0, 0, 0, 0],[0, 5, 0, 0, 0],[0, 0, 5, 0, 0],[0, 0, 0, 5, 0],
 mu_t = np.zeros((7,1))
 E_t = np.zeros((7,7))
 
-mu_t = np.array([[0],[0],[2],[1],[0],[0],[pi/2]])
+actual = np.copy(mu_t)
+actual[2] = 2
+actual[3] = 1
+delta_t = 1
 
-for i in range(1):
-    mu_t = apply_f(mu_t, 1)
-    print()
+for i in range(10):
+    actual = apply_f(actual, delta_t)
+    z_tp1 = np.append(actual[:4], actual[6]).reshape(-1,1)
+    print('i: ', i)
+    print(actual)
+    mu_t, E_t = step(mu_t, E_t, E_x, H, E_z, z_tp1, delta_t)
     print(mu_t)
+    print()
+
+
 
