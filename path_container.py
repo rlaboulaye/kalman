@@ -25,7 +25,5 @@ class PathContainer(object):
         self.lock.release()
 
 
-    def changed():
+    def is_changed(self):
         return self.changed
-
-
