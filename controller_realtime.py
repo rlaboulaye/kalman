@@ -88,17 +88,26 @@ def main(host, port):
         not_in_radius = True
 
         while not_in_radius:
-            if path_container.changed():
+            if path_container.is_changed():
                 return
             res = do('where robot')
             robot_dic = json.loads(res)
             res = do('where others')
             others_dic = json.loads(res)
+            if goal in others_dic:
+                goal_position = others_dic[goal]['center']
+                goal_position = [round(goal_position[0]), round(goal_position[1])]
+                print('SETTING GOAL POSITION')
+                pos_container.set_goal_position(goal_position)
+                print('FINISHED SETTING GOAL POSITION')
             speed_set = False
             if ('orientation' in robot_dic):
                 robot_direction = robot_dic['orientation']
                 robot_position = robot_dic['center']
+                print('SET ROBOT POSITION')
+                print(robot_position)
                 pos_container.set_robot_position(robot_position)
+                print('FINISHED SETTING ROBOT POSITION')
                 force = [0, 0]
                 force = np.add(force, field_dic[waypoint].get_vector(robot_position, waypoint_position))
                 for tag_key in others_dic:
@@ -142,12 +151,12 @@ def main(host, port):
 
 
         if search_strategy == RTRRTStar:
-            time_limit = 0
+            time_limit = 0.05
 
             searcher = search_strategy(field_dim, time_limit, tag_radius, robot_radius, 50)
             path_container = PathContainer()
             pos_container = PositionContainer(robot_position, obstacle_pos, goal_position)
-            pathfinder = Pathfinder(searcher, path_container, pos_container)
+            pathfinder = Pathfinder(searcher, path_container, pos_container, tag_radius)
             pathfinder.start()
 
             res = do('where others')
@@ -176,19 +185,22 @@ def main(host, port):
             for obstacle_key in others_dic:
                 center = others_dic[obstacle_key]['center']
                 obstacle_pos.append([round(center[0]), round(center[1])])
-                   
+
 #            path = searcher.get_path(robot_position, obstacle_pos, goal_position, 10)
 #            approach_waypoint(path[1], goal, tag_radius)
             not_at_goal = True
             while not_at_goal:
                 path = path_container.get_path()
+                if path == None:
+                    continue
+                del path[0]
                 for waypoint in path:
                     approach_waypoint(waypoint, goal, tag_radius, path_container, pos_container)
-                    if path_container.changed():
+                    if path_container.is_changed():
                         break
                 distance_to_goal = math.sqrt((goal_position[0] - robot_position[0]) ** 2 + (goal_position[1] - robot_position[1]) ** 2)
                 not_at_goal = distance_to_goal > tag_radius * 2
- 
+
         else:
             searcher = search_strategy(field_dim, tag_radius, robot_radius)
             waypoints = searcher.get_path(robot_position, goal_position, obstacle_pos, unit_length)
@@ -203,7 +215,7 @@ def main(host, port):
     do('param kd .5')
 
     field_dim = [1920, 1080]
-    goal = '6'
+    goal = '42'
     unit_length = 30
     # search_strategy = RRTSearch
     search_strategy = RTRRTStar

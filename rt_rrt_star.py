@@ -101,7 +101,11 @@ class RTRRTStar(object):
 
     def get_path(self, robot_pos, obstacle_pos, goal_pos, num_nodes):
         self.create_occupancy_grid(self.field_dim, obstacle_pos, self.tag_radius, self.robot_radius)
+        print('SEARCH ROBOT POSITION:')
+        print(robot_pos)
         self.search_root = RRTNode(robot_pos)
+        print('SEARCH ROOT POSITION:')
+        print(self.search_root.pos)
         self.T.add_node(self.search_root)
         self.search_goal = RRTNode(goal_pos)
         nodes_added = 0
@@ -116,7 +120,7 @@ class RTRRTStar(object):
         else:
             self.search_goal = self.T.get_nearest_node(self.search_goal)
         return self.reconstruct_path()
-    
+
 
     def expand_rewire(self, T, Q_r, Q_s, k_max, r_s):
         while True:
@@ -179,5 +183,3 @@ class RTRRTStar(object):
                 if not x_near in rewired_nodes:
                     Q_s.append(x_near)
                     rewired_nodes.add(x_near)
-
-

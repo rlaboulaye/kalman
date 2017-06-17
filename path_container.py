@@ -19,13 +19,13 @@ class PathContainer(object):
 
 
     def set_path(self, path):
+        print('PATH CONTAINER - SET PATH:')
+        print(path)
         self.lock.acquire()
         self.path = path
         self.changed = True
         self.lock.release()
 
 
-    def changed():
+    def is_changed(self):
         return self.changed
-
-

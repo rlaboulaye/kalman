@@ -13,7 +13,7 @@ class PositionContainer(object):
 
     def get_positions(self):
         self.lock.acquire()
-        positions = (robot_pos, obstacle_pos, goal_pos)
+        positions = (self.robot_pos, self.obstacle_pos, self.goal_pos)
         self.changed = False
         self.lock.release()
         return positions
@@ -29,8 +29,12 @@ class PositionContainer(object):
 
 
     def set_robot_position(self, robot_pos):
+        print('SETTING ROBOT POSITION:')
+        print(robot_pos)
         self.lock.acquire()
         self.robot_pos = robot_pos
+        print('SELF.ROBOT_POS:')
+        print(self.robot_pos)
         self.lock.release()
 
 
@@ -48,5 +52,3 @@ class PositionContainer(object):
 
     def changed():
         return self.changed
-
-
