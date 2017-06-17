@@ -31,7 +31,7 @@ def apply_f(mu_t, delta_t):
     w = (1 / b) * (vr - vl)
 
     vec[0,0] = px + r * (-sin(theta) + (cos(theta) * sin(w * delta_t)) + (sin(theta) * cos(w * delta_t)))
-    vec[1,0] = px + r * (cos(theta) + (sin(theta) * sin(w * delta_t)) - (cos(theta) * cos(w * delta_t)))
+    vec[1,0] = py + r * (cos(theta) + (sin(theta) * sin(w * delta_t)) - (cos(theta) * cos(w * delta_t)))
     vec[2,0] = vr + delta_t * ar
     vec[3,0] = vl + delta_t * al
     vec[4,0] = ar
@@ -55,11 +55,61 @@ def get_jacobian(mu_t, delta_t):
     if (vr == vl):
         vl -= .0001
 
-    # r is the radius of the circle
-    r = abs((b / 2) * ((vl + vr) / (vr - vl)))
+    jac[0,0] = 1
+    jac[0,1] = 0
+    jac[0,2] = ((delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * b * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta)))) / (2 * (vr - vl) ** 2)
+    jac[0,3] = ((2 * b * vr * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta))) - (delta_t * cos((dekta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2) 
+    jac[0,4] = 0
+    jac[0,5] = 0
+    jac[0,6] = b * (vr + vl) * (cos(delta_t * (vr - vl) / b) * cos(theta) - cos(theta) - sin(delta_t * (vr - vl) / b) * sin(theta)) / (2 * (vr - vl))
 
-    jac[0,0]
+    jac[1,0] = 0
+    jac[1,1] = 1
+    jac[1,2] = ((delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta))))) / (2 * (vr - vl) ** 2)
+    jac[1,3] = ((2 * vr * b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta)))) - (delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2)
+    jac[1,4] = 0
+    jac[1,5] = 0
+    jac[1,6] = b * (vr + vl) * ((sin(delta_t * (vr - vl) / b) * cos(theta)) + (cos(delta_t * (vr - vl) / b) * sin(theta)) - sin(theta)) / (2 * (vr - vl))
 
+    jac[2,0] = 
+    jac[2,1] = 
+    jac[2,2] = 
+    jac[2,3] = 
+    jac[2,4] = 
+    jac[2,5] = 
+    jac[2,6] = 
+
+    jac[3,0] = 
+    jac[3,1] = 
+    jac[3,2] = 
+    jac[3,3] = 
+    jac[3,4] = 
+    jac[3,5] = 
+    jac[3,6] = 
+
+    jac[4,0] = 
+    jac[4,1] = 
+    jac[4,2] = 
+    jac[4,3] = 
+    jac[4,4] = 
+    jac[4,5] = 
+    jac[4,6] = 
+
+    jac[5,0] = 
+    jac[5,1] = 
+    jac[5,2] = 
+    jac[5,3] = 
+    jac[5,4] = 
+    jac[5,5] = 
+    jac[5,6] = 
+
+    jac[6,0] = 
+    jac[6,1] = 
+    jac[6,2] = 
+    jac[6,3] = 
+    jac[6,4] = 
+    jac[6,5] = 
+    jac[6,6] = 
 
 # px, py, vr, vl, ar, al
 E_x = np.array([[1, 0, 0, 0, 0, 0, 0],[1, 0, 0, 0, 0, 0, 0],[0, 0, 5, 0, 0, 0, 0],[0, 0, 0, 5, 0, 0, 0],[0, 0, 0, 0, 10, 0, 0],[0, 0, 0, 0, 0, 10, 0],[0, 0, 0, 0, 0, 0, .3]])
