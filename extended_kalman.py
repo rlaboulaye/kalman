@@ -53,7 +53,7 @@ class ExtendedKalman(object):
         vec[3,0] = vl + delta_t * al
         vec[4,0] = ar
         vec[5,0] = al
-        vec[6,0] = (theta + (w * delta_t)) #% (2 * pi)
+        vec[6,0] = (theta + (w * delta_t)) % (2 * pi)
         return vec
 
     def get_jacobian(self, mu_t, delta_t):

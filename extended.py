@@ -38,7 +38,7 @@ def apply_f(mu_t, delta_t):
     vec[3,0] = vl + delta_t * al
     vec[4,0] = ar
     vec[5,0] = al
-    vec[6,0] = (theta + (w * delta_t)) #% (2 * pi)
+    vec[6,0] = (theta + (w * delta_t)) % (2 * pi)
     return vec
 
 def get_jacobian(mu_t, delta_t):
@@ -128,7 +128,7 @@ actual[2] = 3
 actual[3] = 2.9
 delta_t = 1
 
-for i in range(5):
+for i in range(100):
     actual = apply_f(actual, delta_t)
     z_tp1 = np.append(actual[:4], actual[6]).reshape(-1,1)
     print('i: ', i)
