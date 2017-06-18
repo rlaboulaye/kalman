@@ -20,16 +20,16 @@ class WheelSpeed(object):
         theta = np.arccos(dot_product / magnitude_product)
         if np.isnan(theta):
             theta = 0
-        if (theta > math.pi / 2):
-            speed[0] = -1 * speed[0]
-            speed[1] = -1 * speed[1]
-            object_direction[0] = -1 * object_direction[0]
-            object_direction[1] = -1 * object_direction[1]
-            dot_product = np.dot(force, object_direction)
-            magnitude_product = np.linalg.norm(force) * np.linalg.norm(object_direction)
-            theta = np.arccos(dot_product / magnitude_product)
-            if np.isnan(theta):
-                theta = 0
+        # if (theta > math.pi / 2):
+        #     speed[0] = -1 * speed[0]
+        #     speed[1] = -1 * speed[1]
+        #     object_direction[0] = -1 * object_direction[0]
+        #     object_direction[1] = -1 * object_direction[1]
+        #     dot_product = np.dot(force, object_direction)
+        #     magnitude_product = np.linalg.norm(force) * np.linalg.norm(object_direction)
+        #     theta = np.arccos(dot_product / magnitude_product)
+        #     if np.isnan(theta):
+        #        theta = 0
         direction = np.dot(np.cross(np.append(object_direction, [0]), np.append(force, [0])), [0,0,1])
         delta_v = int(self.MAX_ROTATION_DELTA * theta / (math.pi / 2))
         if (direction < 0):

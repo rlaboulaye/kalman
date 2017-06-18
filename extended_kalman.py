@@ -5,19 +5,19 @@ from queue import Queue
 class ExtendedKalman(object):
 
     def __init__(self, delta_t, lag_multiplier, initial_pos, initial_orientation, wheel_distance):
-        
+
         self.b = wheel_distance
         self.delta_t = delta_t
         self.lag_multiplier = lag_multiplier
 
         self.velocities = Queue(maxsize=self.lag_multiplier)
 
-        self.E_x = np.array([[1, 0, 0, 0, 0, 0, 0],[1, 0, 0, 0, 0, 0, 0],[0, 0, 4, 0, 0, 0, 0],[0, 0, 0, 4, 0, 0, 0],[0, 0, 0, 0, 10, 0, 0],[0, 0, 0, 0, 0, 10, 0],[0, 0, 0, 0, 0, 0, .4]])
+        self.E_x = np.array([[1, 0, 0, 0, 0, 0, 0],[0, 1, 0, 0, 0, 0, 0],[0, 0, 4, 0, 0, 0, 0],[0, 0, 0, 4, 0, 0, 0],[0, 0, 0, 0, 10, 0, 0],[0, 0, 0, 0, 0, 10, 0],[0, 0, 0, 0, 0, 0, .6]])
         self.H = np.array([[1, 0, 0, 0, 0, 0, 0],[0, 1, 0, 0, 0, 0, 0],[0, 0, 1, 0, 0, 0, 0],[0, 0, 0, 1, 0, 0, 0],[0, 0, 0, 0, 0, 0, 1]])
-        self.E_z = np.array([[4, 0, 0, 0, 0],[0, 4, 0, 0, 0],[0, 0, 5, 0, 0],[0, 0, 0, 5, 0],[0, 0, 0, 0, .05]])
+        self.E_z = np.array([[4, 0, 0, 0, 0],[0, 4, 0, 0, 0],[0, 0, 15, 0, 0],[0, 0, 0, 15, 0],[0, 0, 0, 0, .2]])
 
         self.H_vel = np.array([[0, 0, 1, 0, 0, 0, 0],[0, 0, 0, 1, 0, 0, 0]])
-        self.E_z_vel = np.array([[5, 0],[0, 5]])
+        self.E_z_vel = np.array([[15, 0],[0, 15]])
 
         self.reset(initial_pos, initial_orientation)
 
@@ -43,7 +43,7 @@ class ExtendedKalman(object):
         r = (self.b / 2) * ((vl + vr) / (vr - vl))
 
         # w is angular velocity
-        w = (1 / b) * (vr - vl)
+        w = (1 / self.b) * (vr - vl)
 
         vec[0,0] = px + r * (-sin(theta) + (cos(theta) * sin(w * delta_t)) + (sin(theta) * cos(w * delta_t)))
         vec[1,0] = py + r * (cos(theta) + (sin(theta) * sin(w * delta_t)) - (cos(theta) * cos(w * delta_t)))
@@ -64,24 +64,26 @@ class ExtendedKalman(object):
         al = mu_t[5,0]
         theta = mu_t[6,0]
 
+        b = self.b
+
         if (vr == vl):
             vl -= .0001
 
         jac[0,0] = 1
         jac[0,1] = 0
-        jac[0,2] = ((delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * self.b * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta)))) / (2 * (vr - vl) ** 2)
-        jac[0,3] = ((2 * self.b * vr * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta))) - (delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2)
+        jac[0,2] = ((delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * b * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta)))) / (2 * (vr - vl) ** 2)
+        jac[0,3] = ((2 * b * vr * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta))) - (delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2)
         jac[0,4] = 0
         jac[0,5] = 0
-        jac[0,6] = self.b * (vr + vl) * (cos(delta_t * (vr - vl) / b) * cos(theta) - cos(theta) - sin(delta_t * (vr - vl) / b) * sin(theta)) / (2 * (vr - vl))
-    
+        jac[0,6] = b * (vr + vl) * (cos(delta_t * (vr - vl) / b) * cos(theta) - cos(theta) - sin(delta_t * (vr - vl) / b) * sin(theta)) / (2 * (vr - vl))
+
         jac[1,0] = 0
         jac[1,1] = 1
-        jac[1,2] = ((delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * self.b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta))))) / (2 * (vr - vl) ** 2)
-        jac[1,3] = ((2 * vr * self.b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta)))) - (delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2)
+        jac[1,2] = ((delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta))))) / (2 * (vr - vl) ** 2)
+        jac[1,3] = ((2 * vr * b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta)))) - (delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2)
         jac[1,4] = 0
         jac[1,5] = 0
-        jac[1,6] = self.b * (vr + vl) * ((sin(delta_t * (vr - vl) / b) * cos(theta)) + (cos(delta_t * (vr - vl) / b) * sin(theta)) - sin(theta)) / (2 * (vr - vl))
+        jac[1,6] = b * (vr + vl) * ((sin(delta_t * (vr - vl) / b) * cos(theta)) + (cos(delta_t * (vr - vl) / b) * sin(theta)) - sin(theta)) / (2 * (vr - vl))
 
         jac[2,0] = 0
         jac[2,1] = 0
@@ -140,7 +142,7 @@ class ExtendedKalman(object):
             pos_old = pos
             vel_old = self.velocities.get()
             z_tp1 = np.array([[pos_old[0]],[pos_old[1]],[vel_old[0]],[vel_old[1]],[orientation_old]])
-            mu_tp1, E_tp1 = self.step(self.mu_t, self.E_t, self.E_x, self.H, self.E_z, z_tp1, delta_t)
+            mu_tp1, E_tp1 = self.step(self.mu_t, self.E_t, self.E_x, self.H, self.E_z, z_tp1, self.delta_t)
             self.mu_t = mu_tp1
             self.E_t = E_tp1
 
@@ -152,7 +154,7 @@ class ExtendedKalman(object):
             new_vel = self.velocities.get()
             backup_velocities.put(new_vel)
             z_tp1 = np.array([[new_vel[0]],[new_vel[1]]])
-            mu_tp1, E_tp1 = self.step(mu_t, E_t, F, self.E_x, self.H_vel, self.E_z_vel, z_tp1)
+            mu_tp1, E_tp1 = self.step(mu_t, E_t, self.E_x, self.H_vel, self.E_z_vel, z_tp1, self.delta_t)
             mu_t = mu_tp1
             E_t = E_tp1
         self.velocities = backup_velocities
@@ -162,6 +164,5 @@ class ExtendedKalman(object):
             delta_t = prediction_factor * self.delta_t
             mu_tp1 = self.apply_f(mu_tp1, delta_t)
 
-        new_pos = [mu_tp1[0], mu_tp1[3]]
+        new_pos = [mu_tp1[0], mu_tp1[1]]
         return new_pos
-

@@ -29,31 +29,34 @@ def main(host, port):
         print()
         return res
 
-    def follow_goal(goal, delta_t, lag_multiplier, speed_multiplier):
-        max_force = 5
-        goal_radius = tag_radius * 2
-        goal_field = af(goal_radius, 10, max_force, True)
-        ws = WheelSpeed(float(max_force))
-        not_in_radius = True
-
+    def follow_goal(goal, delta_t, lag_multiplier, speed_multiplier, y_adj):
         robot_dic = {}
         while (not 'orientation' in robot_dic):
             res = do('where robot')
             robot_dic = json.loads(res)
         robot_position = robot_dic['center']
+        robot_position = [robot_position[0], y_adj - robot_position[1]]
         robot_direction = robot_dic['orientation']
-        robot_angle = (math.atan2(robot_direction[1] / robot_direction[0]) + 2 * math.pi) % (2 * math.pi)
+        robot_direction = [robot_direction[0], -1 * robot_direction[1]]
+        robot_angle = (math.atan2(robot_direction[1], robot_direction[0]) + 2 * math.pi) % (2 * math.pi)
 
         others_dic = {}
         while (not goal in others_dic):
             res = do('where others')
             others_dic = json.loads(res)
         goal_position = others_dic[goal]['center']
+        goal_position = [goal_position[0], y_adj - goal_position[1]]
         corner1 = others_dic[goal]['corners'][0]
         corner2 = others_dic[goal]['corners'][1]
         corner3 = others_dic[goal]['corners'][2]
         tag_radius = round(math.sqrt(((corner3[0] - corner1[0]) / 2) ** 2 + ((corner3[1] - corner1[1]) / 2) ** 2) * 1.5)
         wheel_distance = math.sqrt((corner2[0] - corner1[0]) ** 2 + (corner2[1] - corner1[1]) ** 2)
+
+        max_force = 5
+        goal_radius = tag_radius * 2
+        goal_field = af(goal_radius, 10, max_force, True)
+        ws = WheelSpeed(float(max_force))
+        not_in_radius = True
 
         kalman_robot = ExtendedKalman(delta_t, lag_multiplier, robot_position, robot_angle, wheel_distance)
         kalman_goal = Kalman(delta_t, lag_multiplier, goal_position, pos_only=True)
@@ -69,12 +72,16 @@ def main(host, port):
             if ('orientation' in robot_dic and goal in others_dic):
 
                 robot_direction = robot_dic['orientation']
-                robot_angle = (math.atan2(robot_direction[1] / robot_direction[0]) + 2 * math.pi) % (2 * math.pi)
+                robot_direction = [robot_direction[0], -1 * robot_direction[1]]
+                robot_angle = math.atan2(robot_direction[1], robot_direction[0])
+                robot_angle = robot_angle % (2 * math.pi)
                 robot_position = robot_dic['center']
+                robot_position = [robot_position[0], y_adj - robot_position[1]]
                 speed = [speed_dic['speed_b'] * speed_multiplier, speed_dic['speed_a'] * speed_multiplier]
                 robot_position = kalman_robot.get_position(robot_position, speed, robot_angle)
 
                 goal_position = others_dic[goal]['center']
+                goal_position = [goal_position[0], y_adj - goal_position[1]]
                 goal_position = kalman_goal.get_position(goal_position)
 
                 force = [0, 0]
@@ -96,12 +103,12 @@ def main(host, port):
     do('param kd .5')
 
     field_dim = [1920, 1080]
-    goal = '6'
+    goal = '30'
 
     delta_t = .205
     lag_multiplier = 4
     speed_multiplier = 16
-    follow_goal(goal, delta_t, lag_multiplier, speed_multiplier) 
+    follow_goal(goal, delta_t, lag_multiplier, speed_multiplier, field_dim[1])
 
     writer.close()
 
