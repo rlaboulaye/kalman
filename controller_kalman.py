@@ -78,7 +78,8 @@ def main(host, port):
                 robot_position = robot_dic['center']
                 robot_position = [robot_position[0], y_adj - robot_position[1]]
                 speed = [speed_dic['speed_b'] * speed_multiplier, speed_dic['speed_a'] * speed_multiplier]
-                robot_position = kalman_robot.get_position(robot_position, speed, robot_angle)
+                robot_position, robot_angle = kalman_robot.get_position(robot_position, speed, robot_angle)
+                robot_direction = [math.cos(robot_angle), math.sin(robot_angle)]
 
                 goal_position = others_dic[goal]['center']
                 goal_position = [goal_position[0], y_adj - goal_position[1]]

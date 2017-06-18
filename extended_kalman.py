@@ -165,4 +165,5 @@ class ExtendedKalman(object):
             mu_tp1 = self.apply_f(mu_tp1, delta_t)
 
         new_pos = [mu_tp1[0], mu_tp1[1]]
-        return new_pos
+        new_orientation = mu_tp1[6]
+        return new_pos, new_orientation

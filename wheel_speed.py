@@ -13,8 +13,8 @@ class WheelSpeed(object):
         return speed
 
     def adjust_speed_for_rotation(self, speed, object_direction, force):
-        force = [force[0], -1 * force[1]]
-        object_direction = [object_direction[0], -1 * object_direction[1]]
+        force = [force[0], force[1]]
+        object_direction = [object_direction[0], object_direction[1]]
         dot_product = np.dot(force, object_direction)
         magnitude_product = np.linalg.norm(force) * np.linalg.norm(object_direction)
         theta = np.arccos(dot_product / magnitude_product)
