@@ -126,7 +126,7 @@ def main(host, port):
         others_dic = json.loads(res)
         corner1 = others_dic[goal]['corners'][0]
         corner3 = others_dic[goal]['corners'][2]
-        tag_radius = round(math.sqrt(((corner3[0] - corner1[0]) / 2) ** 2 + ((corner3[1] - corner1[1]) / 2) ** 2) * 1.2)
+        tag_radius = round(math.sqrt(((corner3[0] - corner1[0]) / 2) ** 2 + ((corner3[1] - corner1[1]) / 2) ** 2) * 2)
         robot_radius = tag_radius
 
         robot_dic = {}
@@ -163,7 +163,7 @@ def main(host, port):
             others_dic = json.loads(res)
             corner1 = others_dic[goal]['corners'][0]
             corner3 = others_dic[goal]['corners'][2]
-            tag_radius = round(math.sqrt(((corner3[0] - corner1[0]) / 2) ** 2 + ((corner3[1] - corner1[1]) / 2) ** 2) * 1.2)
+            tag_radius = round(math.sqrt(((corner3[0] - corner1[0]) / 2) ** 2 + ((corner3[1] - corner1[1]) / 2) ** 2) * 2)
             robot_radius = tag_radius
 
             robot_dic = {}
@@ -215,7 +215,7 @@ def main(host, port):
     do('param kd .5')
 
     field_dim = [1920, 1080]
-    goal = '42'
+    goal = '30'
     unit_length = 30
     # search_strategy = RRTSearch
     search_strategy = RTRRTStar
