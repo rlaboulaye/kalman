@@ -14,10 +14,10 @@ class Kalman(object):
             self.get_position = self.get_position_from_position_and_velocity
             self.velocities = Queue(maxsize=self.lag_multiplier)
 
-        self.E_x = np.array([[1, 0, 0, 0, 0, 0],[0, 10, 0, 0, 0, 0],[0, 0, 100, 0, 0, 0],[0, 0, 0, 1, 0, 0],[0, 0, 0, 0, 10, 0],[0, 0, 0, 0, 0, 100]])
+        self.E_x = np.array([[1, 0, 0, 0, 0, 0],[0, 4, 0, 0, 0, 0],[0, 0, 10, 0, 0, 0],[0, 0, 0, 1, 0, 0],[0, 0, 0, 0, 4, 0],[0, 0, 0, 0, 0, 10]])
 
         self.H_pos = np.array([[1, 0, 0, 0, 0, 0],[0, 0, 0, 1, 0, 0]])
-        self.E_z_pos = np.array([[5, 0],[0, 5]])
+        self.E_z_pos = np.array([[4, 0],[0, 4]])
 
         self.H_vel = np.array([[0, 1, 0, 0, 0, 0],[0, 0, 0, 0, 1, 0]])
         self.E_z_vel = np.array([[5, 0],[0, 5]])
