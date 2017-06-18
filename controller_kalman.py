@@ -29,7 +29,7 @@ def main(host, port):
         print()
         return res
 
-    def follow_goal(goal, delta_t, lag_multiplier):
+    def follow_goal(goal, delta_t, lag_multiplier, speed_multiplier):
         max_force = 5
         goal_radius = tag_radius * 2
         goal_field = af(goal_radius, 10, max_force, True)
@@ -71,7 +71,7 @@ def main(host, port):
                 robot_direction = robot_dic['orientation']
                 robot_angle = (math.atan2(robot_direction[1] / robot_direction[0]) + 2 * math.pi) % (2 * math.pi)
                 robot_position = robot_dic['center']
-                speed = [speed_dic['speed_b'], speed_dic['speed_a']]
+                speed = [speed_dic['speed_b'] * speed_multiplier, speed_dic['speed_a'] * speed_multiplier]
                 robot_position = kalman_robot.get_position(robot_position, speed, robot_angle)
 
                 goal_position = others_dic[goal]['center']
@@ -100,7 +100,8 @@ def main(host, port):
 
     delta_t = .205
     lag_multiplier = 4
-    follow_goal(goal, delta_t, lag_multiplier) 
+    speed_multiplier = 16
+    follow_goal(goal, delta_t, lag_multiplier, speed_multiplier) 
 
     writer.close()
 
