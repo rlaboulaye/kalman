@@ -4,8 +4,9 @@ from queue import Queue
 
 class ExtendedKalman(object):
 
-    def __init__(self, delta_t, lag_multiplier, initial_pos, initial_orientation):
+    def __init__(self, delta_t, lag_multiplier, initial_pos, initial_orientation, wheel_distance):
         
+        self.b = wheel_distance
         self.delta_t = delta_t
         self.lag_multiplier = lag_multiplier
 
@@ -26,9 +27,6 @@ class ExtendedKalman(object):
         self.velocities = Queue(maxsize=self.lag_multiplier)
 
     def apply_f(self, mu_t, delta_t):
-        # b is the distance between the wheels
-        b = 1
-
         vec = np.zeros((7,1))
         px = mu_t[0,0]
         py = mu_t[1,0]
@@ -42,7 +40,7 @@ class ExtendedKalman(object):
             vl -= .0001
 
         # r is the radius of the circle
-        r = (b / 2) * ((vl + vr) / (vr - vl))
+        r = (self.b / 2) * ((vl + vr) / (vr - vl))
 
         # w is angular velocity
         w = (1 / b) * (vr - vl)
@@ -57,9 +55,6 @@ class ExtendedKalman(object):
         return vec
 
     def get_jacobian(self, mu_t, delta_t):
-        # b is the distance between the wheels
-        b = 1
-
         jac = np.zeros((7,7))
         px = mu_t[0,0]
         py = mu_t[1,0]
@@ -74,19 +69,19 @@ class ExtendedKalman(object):
 
         jac[0,0] = 1
         jac[0,1] = 0
-        jac[0,2] = ((delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * b * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta)))) / (2 * (vr - vl) ** 2)
-        jac[0,3] = ((2 * b * vr * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta))) - (delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2)
+        jac[0,2] = ((delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * self.b * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta)))) / (2 * (vr - vl) ** 2)
+        jac[0,3] = ((2 * self.b * vr * ((cos(delta_t * (vr - vl) / b) * sin(theta)) + (sin(delta_t * (vr - vl) / b) * cos(theta)) - sin(theta))) - (delta_t * cos((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2)
         jac[0,4] = 0
         jac[0,5] = 0
-        jac[0,6] = b * (vr + vl) * (cos(delta_t * (vr - vl) / b) * cos(theta) - cos(theta) - sin(delta_t * (vr - vl) / b) * sin(theta)) / (2 * (vr - vl))
+        jac[0,6] = self.b * (vr + vl) * (cos(delta_t * (vr - vl) / b) * cos(theta) - cos(theta) - sin(delta_t * (vr - vl) / b) * sin(theta)) / (2 * (vr - vl))
     
         jac[1,0] = 0
         jac[1,1] = 1
-        jac[1,2] = ((delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta))))) / (2 * (vr - vl) ** 2)
-        jac[1,3] = ((2 * vr * b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta)))) - (delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2)
+        jac[1,2] = ((delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl)) - (2 * vl * self.b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta))))) / (2 * (vr - vl) ** 2)
+        jac[1,3] = ((2 * vr * self.b * (cos(theta) + (sin(delta_t * (vr - vl) / b) * sin(theta)) - (cos(delta_t * (vr - vl) / b) * cos(theta)))) - (delta_t * sin((delta_t * (vr - vl) / b) + theta) * (vr + vl) * (vr - vl))) / (2 * (vr - vl) ** 2)
         jac[1,4] = 0
         jac[1,5] = 0
-        jac[1,6] = b * (vr + vl) * ((sin(delta_t * (vr - vl) / b) * cos(theta)) + (cos(delta_t * (vr - vl) / b) * sin(theta)) - sin(theta)) / (2 * (vr - vl))
+        jac[1,6] = self.b * (vr + vl) * ((sin(delta_t * (vr - vl) / b) * cos(theta)) + (cos(delta_t * (vr - vl) / b) * sin(theta)) - sin(theta)) / (2 * (vr - vl))
 
         jac[2,0] = 0
         jac[2,1] = 0
